@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import saApi from '../../services/superAdminApi';
 import { useUI } from '../../context/UIContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const statusConfig = {
   pending: { label: 'Pending', color: 'bg-amber-100 text-amber-700 border-amber-200', icon: <Clock size={14} />, dotColor: 'bg-amber-500' },
@@ -16,6 +17,7 @@ const statusConfig = {
 
 const SASupportTickets = () => {
   const { showAlert, showConfirm } = useUI();
+  const { t, formatDate: formatLocalSettingsDate } = useSettings();
   const [mainTab, setMainTab] = useState('tickets'); // 'tickets' | 'enquiries'
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -236,8 +238,8 @@ const SASupportTickets = () => {
           <LifeBuoy size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Support & Inquiries Hub</h1>
-          <p className="text-sm text-slate-500">Manage client tickets and website/login help enquiries</p>
+          <h1 className="text-xl font-bold text-slate-800">{t('Support & Inquiries Hub')}</h1>
+          <p className="text-sm text-slate-500">{t('Manage client tickets and website/login help enquiries')}</p>
         </div>
       </div>
 
@@ -252,7 +254,7 @@ const SASupportTickets = () => {
           }`}
         >
           <LifeBuoy size={15} />
-          <span>Client Support Tickets ({tickets.length})</span>
+          <span>{t('Client Support Tickets')} ({tickets.length})</span>
         </button>
 
         <button
@@ -264,10 +266,10 @@ const SASupportTickets = () => {
           }`}
         >
           <Mail size={15} />
-          <span>Website & Login Enquiries ({enquiries.length})</span>
+          <span>{t('Website & Login Enquiries')} ({enquiries.length})</span>
           {pendingEnquiryCount > 0 && (
             <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse">
-              {pendingEnquiryCount} New
+              {pendingEnquiryCount} {t('New')}
             </span>
           )}
         </button>
@@ -288,7 +290,7 @@ const SASupportTickets = () => {
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                {f === 'all' ? 'All Tickets' : f === 'seen' ? 'In Discussion' : f.charAt(0).toUpperCase() + f.slice(1)} ({counts[f]})
+                {f === 'all' ? t('All Tickets') : f === 'seen' ? t('In Discussion') : t(f.charAt(0).toUpperCase() + f.slice(1))} ({counts[f]})
               </button>
             ))}
           </div>
@@ -302,20 +304,20 @@ const SASupportTickets = () => {
             ) : filteredTickets.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                 <LifeBuoy size={48} className="mb-3 opacity-40" />
-                <p className="font-semibold text-base">No tickets found</p>
-                <p className="text-xs mt-1">There are no tickets matching this filter.</p>
+                <p className="font-semibold text-base">{t('No tickets found')}</p>
+                <p className="text-xs mt-1">{t('There are no tickets matching this filter.')}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50/80 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                     <tr>
-                      <th className="px-5 py-3.5">Ticket #</th>
-                      <th className="px-5 py-3.5">Company</th>
-                      <th className="px-5 py-3.5">Issue</th>
-                      <th className="px-5 py-3.5">Status</th>
-                      <th className="px-5 py-3.5">Date</th>
-                      <th className="px-5 py-3.5 text-center">Action</th>
+                      <th className="px-5 py-3.5">{t('Ticket #')}</th>
+                      <th className="px-5 py-3.5">{t('Company')}</th>
+                      <th className="px-5 py-3.5">{t('Issue')}</th>
+                      <th className="px-5 py-3.5">{t('Status')}</th>
+                      <th className="px-5 py-3.5">{t('Date')}</th>
+                      <th className="px-5 py-3.5 text-center">{t('Action')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -347,7 +349,7 @@ const SASupportTickets = () => {
                           <td className="px-5 py-4">
                             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${status.color}`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${status.dotColor}`} />
-                              {status.label}
+                              {t(status.label)}
                             </span>
                           </td>
                           <td className="px-5 py-4 text-xs text-slate-400 whitespace-nowrap">
@@ -359,7 +361,7 @@ const SASupportTickets = () => {
                               className="px-3.5 py-1.5 bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold rounded-xl text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
                             >
                               <Eye size={14} />
-                              <span>View & Chat</span>
+                              <span>{t('View & Chat')}</span>
                             </button>
                           </td>
                         </motion.tr>
@@ -380,9 +382,9 @@ const SASupportTickets = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200">
             <div className="flex gap-2 flex-wrap">
               {[
-                { id: 'all', label: 'All Enquiries', count: enquiries.length },
-                { id: 'pending', label: 'Pending', count: enquiries.filter(e => e.status !== 'resolved').length },
-                { id: 'resolved', label: 'Resolved', count: enquiries.filter(e => e.status === 'resolved').length }
+                { id: 'all', label: `${t('All Enquiries')}`, count: enquiries.length },
+                { id: 'pending', label: `${t('Pending')}`, count: enquiries.filter(e => e.status !== 'resolved').length },
+                { id: 'resolved', label: `${t('Resolved')}`, count: enquiries.filter(e => e.status === 'resolved').length }
               ].map((f) => (
                 <button
                   key={f.id}
@@ -403,7 +405,7 @@ const SASupportTickets = () => {
                 type="text"
                 value={enquirySearch}
                 onChange={e => setEnquirySearch(e.target.value)}
-                placeholder="Search by name, email, subject..."
+                placeholder={t('Search by name, email, subject...')}
                 className="w-full sm:w-64 pl-3.5 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
               />
             </div>
@@ -418,20 +420,20 @@ const SASupportTickets = () => {
             ) : filteredEnquiries.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                 <Mail size={48} className="mb-3 opacity-40" />
-                <p className="font-semibold text-base">No enquiries found</p>
-                <p className="text-xs mt-1">Website contact & login help enquiries will appear here.</p>
+                <p className="font-semibold text-base">{t('No enquiries found')}</p>
+                <p className="text-xs mt-1">{t('Website contact & login help enquiries will appear here.')}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-slate-50/80 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                     <tr>
-                      <th className="px-5 py-3.5">Sender</th>
-                      <th className="px-5 py-3.5">Contact Details</th>
-                      <th className="px-5 py-3.5">Subject & Message</th>
-                      <th className="px-5 py-3.5">Status</th>
-                      <th className="px-5 py-3.5">Date</th>
-                      <th className="px-5 py-3.5 text-center">Actions</th>
+                      <th className="px-5 py-3.5">{t('Sender')}</th>
+                      <th className="px-5 py-3.5">{t('Contact Details')}</th>
+                      <th className="px-5 py-3.5">{t('Subject & Message')}</th>
+                      <th className="px-5 py-3.5">{t('Status')}</th>
+                      <th className="px-5 py-3.5">{t('Date')}</th>
+                      <th className="px-5 py-3.5 text-center">{t('Actions')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">

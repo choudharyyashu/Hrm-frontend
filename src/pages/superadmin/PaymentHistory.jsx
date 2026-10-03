@@ -21,6 +21,7 @@ import { useUI } from '../../context/UIContext';
 
 const PaymentHistory = () => {
   const { showAlert } = useUI();
+  const { t, formatCurrency, formatDate } = useSettings();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [stats, setStats] = useState({
@@ -117,10 +118,10 @@ const PaymentHistory = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-800 uppercase tracking-tight flex items-center gap-2.5">
-            <Receipt className="text-primary w-6 h-6" /> Payment History & Revenue
+            <Receipt className="text-primary w-6 h-6" /> {t('Payment History & Revenue')}
           </h1>
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-            Complete transaction records, incoming revenue & invoice history across all companies
+            {t('Complete transaction records, incoming revenue & invoice history across all companies')}
           </p>
         </div>
         <div className="flex items-center gap-2 self-stretch sm:self-auto">
@@ -130,14 +131,14 @@ const PaymentHistory = () => {
             className="flex-1 sm:flex-none px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl border border-slate-200 shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh</span>
+            <span>{t('Refresh')}</span>
           </button>
           <button
             onClick={handleExportCSV}
             className="flex-1 sm:flex-none px-4 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md shadow-primary/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Download size={14} />
-            <span>Export CSV</span>
+            <span>{t('Export CSV')}</span>
           </button>
         </div>
       </div>
@@ -146,20 +147,20 @@ const PaymentHistory = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-5 text-white shadow-lg shadow-emerald-500/15">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-100">Total Revenue</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-100">{t('Total Revenue')}</span>
             <div className="p-2 bg-white/10 rounded-xl">
               <TrendingUp size={18} className="text-white" />
             </div>
           </div>
           <h3 className="text-2xl font-black tracking-tight">
-            ₹{stats.totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatCurrency(stats.totalRevenue || 0)}
           </h3>
-          <p className="text-[11px] text-emerald-100 font-medium mt-1">Verified incoming subscription revenue</p>
+          <p className="text-[11px] text-emerald-100 font-medium mt-1">{t('Verified incoming subscription revenue')}</p>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Transactions</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('Total Transactions')}</span>
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
               <CreditCard size={18} />
             </div>
@@ -167,12 +168,12 @@ const PaymentHistory = () => {
           <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">
             {stats.totalTransactions}
           </h3>
-          <p className="text-[11px] text-slate-400 font-medium mt-1">All processed payment attempts</p>
+          <p className="text-[11px] text-slate-400 font-medium mt-1">{t('All processed payment attempts')}</p>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Successful Payments</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('Successful Payments')}</span>
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
               <CheckCircle2 size={18} />
             </div>
@@ -180,12 +181,12 @@ const PaymentHistory = () => {
           <h3 className="text-2xl font-black text-emerald-600 tracking-tight">
             {stats.paidTransactions}
           </h3>
-          <p className="text-[11px] text-slate-400 font-medium mt-1">Paid invoices and renewals</p>
+          <p className="text-[11px] text-slate-400 font-medium mt-1">{t('Paid invoices and renewals')}</p>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Paying Companies</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('Paying Companies')}</span>
             <div className="p-2 bg-primary/10 text-primary rounded-xl">
               <Building2 size={18} />
             </div>
@@ -193,7 +194,7 @@ const PaymentHistory = () => {
           <h3 className="text-2xl font-black text-primary tracking-tight">
             {stats.payingCompanies}
           </h3>
-          <p className="text-[11px] text-slate-400 font-medium mt-1">Unique subscribed organizations</p>
+          <p className="text-[11px] text-slate-400 font-medium mt-1">{t('Unique subscribed organizations')}</p>
         </div>
       </div>
 
@@ -205,7 +206,7 @@ const PaymentHistory = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search company, invoice #, razorpay id..."
+            placeholder={t('Search company, invoice #, razorpay id...')}
             className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-slate-800 dark:text-white"
           />
         </div>
@@ -221,7 +222,7 @@ const PaymentHistory = () => {
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
               }`}
             >
-              {st === 'all' ? 'All Status' : st}
+              {st === 'all' ? t('All Status') : t(st.charAt(0).toUpperCase() + st.slice(1))}
             </button>
           ))}
         </div>
@@ -233,13 +234,13 @@ const PaymentHistory = () => {
           <table className="w-full text-left text-xs whitespace-nowrap">
             <thead className="bg-slate-50/80 dark:bg-slate-900/60 text-slate-400 font-black uppercase text-[10px] tracking-wider border-b border-slate-100 dark:border-slate-700">
               <tr>
-                <th className="p-4">Invoice #</th>
-                <th className="p-4">Company & Client</th>
-                <th className="p-4">Plan & Cycle</th>
-                <th className="p-4">Amount</th>
-                <th className="p-4">Razorpay Payment ID</th>
-                <th className="p-4">Date & Time</th>
-                <th className="p-4 text-center">Status</th>
+                <th className="p-4">{t('Invoice #')}</th>
+                <th className="p-4">{t('Company & Client')}</th>
+                <th className="p-4">{t('Plan & Cycle')}</th>
+                <th className="p-4">{t('Amount')}</th>
+                <th className="p-4">{t('Razorpay Payment ID')}</th>
+                <th className="p-4">{t('Date & Time')}</th>
+                <th className="p-4 text-center">{t('Status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200">
@@ -247,15 +248,15 @@ const PaymentHistory = () => {
                 <tr>
                   <td colSpan="7" className="py-20 text-center">
                     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Loading transaction records...</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t('Loading transaction records...')}</p>
                   </td>
                 </tr>
               ) : filteredInvoices.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="py-16 text-center text-slate-400">
                     <Receipt className="w-12 h-12 mx-auto text-slate-300 mb-2" />
-                    <p className="text-sm font-bold text-slate-600 dark:text-slate-300">No payment transactions found</p>
-                    <p className="text-xs text-slate-400 mt-1">Transaction records will appear here as soon as companies subscribe.</p>
+                    <p className="text-sm font-bold text-slate-600 dark:text-slate-300">{t('No payment transactions found')}</p>
+                    <p className="text-xs text-slate-400 mt-1">{t('Transaction records will appear here as soon as companies subscribe.')}</p>
                   </td>
                 </tr>
               ) : (
@@ -280,11 +281,11 @@ const PaymentHistory = () => {
                         {inv.plan_name}
                       </div>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                        Cycle: {inv.billing_cycle || 'Monthly'}
+                        {t('Cycle')}: {t(inv.billing_cycle || 'Monthly')}
                       </div>
                     </td>
                     <td className="p-4 font-black text-base text-emerald-600 dark:text-emerald-400">
-                      ₹{parseFloat(inv.amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatCurrency(parseFloat(inv.amount || 0))}
                     </td>
                     <td className="p-4">
                       {inv.razorpay_payment_id ? (
@@ -295,24 +296,18 @@ const PaymentHistory = () => {
                           <button
                             type="button"
                             onClick={() => handleCopy(inv.razorpay_payment_id, inv.id)}
-                            title="Copy Payment ID"
-                            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-400 hover:text-slate-600 transition-colors"
+                            title={t('Copy Payment ID')}
+                            className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                           >
                             {copiedId === inv.id ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
                           </button>
                         </div>
                       ) : (
-                        <span className="text-slate-400 text-xs italic">Manual / Direct</span>
+                        <span className="text-slate-400 text-xs italic">{t('Manual / Direct')}</span>
                       )}
                     </td>
                     <td className="p-4 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                      {inv.created_at || inv.invoice_date ? new Date(inv.created_at || inv.invoice_date).toLocaleString('en-IN', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      }) : 'N/A'}
+                      {formatDate(inv.created_at || inv.invoice_date, true)}
                     </td>
                     <td className="p-4 text-center">
                       <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border shadow-xs ${
@@ -323,7 +318,7 @@ const PaymentHistory = () => {
                           : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300'
                       }`}>
                         {inv.payment_status === 'paid' ? <CheckCircle2 size={12} /> : inv.payment_status === 'failed' ? <XCircle size={12} /> : <Clock size={12} />}
-                        {inv.payment_status}
+                        {t(inv.payment_status || 'Pending')}
                       </span>
                     </td>
                   </tr>

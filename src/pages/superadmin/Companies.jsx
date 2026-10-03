@@ -3,9 +3,11 @@ import api from '../../utils/axios';
 import { Plus, Edit, Trash2, Eye, EyeOff, X, RefreshCw, Key, Ban, CheckCircle2, Building2, Sparkles, Crown, ShieldAlert, Search, Users, Phone, Mail, Clock, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUI } from '../../context/UIContext';
+import { useSettings } from '../../context/SettingsContext';
 
 const Companies = () => {
   const { showAlert, showConfirm } = useUI();
+  const { t } = useSettings();
   const [companies, setCompanies] = useState([]);
   const [availablePlans, setAvailablePlans] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -332,13 +334,13 @@ const Companies = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print">
         <div>
-          <h1 className="text-xl font-black text-slate-800 uppercase tracking-tighter">Companies & Subscriptions</h1>
+          <h1 className="text-xl font-black text-slate-800 uppercase tracking-tighter">{t('Companies & Subscriptions')}</h1>
           <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest leading-none mt-1">
-            Manage client businesses, Free Trials & Dashboard access
+            {t('Manage client businesses, Free Trials & Dashboard access')}
           </p>
         </div>
         <button onClick={() => openModal('add')} className="btn-primary flex items-center gap-2 text-[11px] font-black uppercase tracking-widest px-4 py-2.5 shadow-sm">
-          <Plus size={16}/> Add Company
+          <Plus size={16}/> {t('Add Company')}
         </button>
       </div>
 
@@ -350,7 +352,7 @@ const Companies = () => {
             <Building2 size={20} />
           </div>
           <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Total Clients</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('Total Clients')}</p>
             <h3 className="text-2xl font-black text-slate-800 mt-1">{totalCount}</h3>
           </div>
         </div>
@@ -362,7 +364,7 @@ const Companies = () => {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <p className="text-[10px] font-black text-violet-700 uppercase tracking-widest leading-none">Free Trials</p>
+              <p className="text-[10px] font-black text-violet-700 uppercase tracking-widest leading-none">{t('Free Trials')}</p>
               <span className="px-1.5 py-0.2 bg-violet-200/60 text-violet-800 text-[8px] font-black rounded-full uppercase">7-Day</span>
             </div>
             <h3 className="text-2xl font-black text-violet-900 mt-1">{trialCount}</h3>
@@ -375,7 +377,7 @@ const Companies = () => {
             <Crown size={20} />
           </div>
           <div>
-            <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest leading-none">Paid Subscriptions</p>
+            <p className="text-[10px] font-black text-blue-700 uppercase tracking-widest leading-none">{t('Paid Subscriptions')}</p>
             <h3 className="text-2xl font-black text-blue-900 mt-1">{paidCount}</h3>
           </div>
         </div>
@@ -386,7 +388,7 @@ const Companies = () => {
             <Ban size={20} />
           </div>
           <div>
-            <p className="text-[10px] font-black text-rose-700 uppercase tracking-widest leading-none">Suspended / Blocked</p>
+            <p className="text-[10px] font-black text-rose-700 uppercase tracking-widest leading-none">{t('Suspended / Blocked')}</p>
             <h3 className="text-2xl font-black text-rose-900 mt-1">{suspendedCount}</h3>
           </div>
         </div>
@@ -397,23 +399,23 @@ const Companies = () => {
         {/* Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 custom-scrollbar">
           {[
-            { id: 'all', label: `All (${totalCount})`, icon: <Building2 size={13} /> },
-            { id: 'trial', label: `🎁 Free Trial (${trialCount})`, icon: null },
-            { id: 'paid', label: `👑 Paid (${paidCount})`, icon: null },
-            { id: 'active', label: `⚡ Active (${activeCount})`, icon: null },
-            { id: 'suspended', label: `🚫 Suspended (${suspendedCount})`, icon: null },
-          ].map(t => (
+            { id: 'all', label: `${t('All')} (${totalCount})`, icon: <Building2 size={13} /> },
+            { id: 'trial', label: `🎁 ${t('Free Trial')} (${trialCount})`, icon: null },
+            { id: 'paid', label: `👑 ${t('Paid')} (${paidCount})`, icon: null },
+            { id: 'active', label: `⚡ ${t('Active')} (${activeCount})`, icon: null },
+            { id: 'suspended', label: `🚫 ${t('Suspended')} (${suspendedCount})`, icon: null },
+          ].map(tb => (
             <button
-              key={t.id}
-              onClick={() => setFilterTab(t.id)}
+              key={tb.id}
+              onClick={() => setFilterTab(tb.id)}
               className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                filterTab === t.id
+                filterTab === tb.id
                   ? 'bg-slate-900 text-white shadow-xs'
                   : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
               }`}
             >
-              {t.icon}
-              {t.label}
+              {tb.icon}
+              {tb.label}
             </button>
           ))}
         </div>
@@ -425,7 +427,7 @@ const Companies = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search company, owner, email..."
+            placeholder={t('Search company, owner, email...')}
             className="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-9 pr-4 py-2 text-xs font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
           />
           {searchTerm && (
@@ -442,11 +444,11 @@ const Companies = () => {
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-600 font-medium border-b border-slate-100">
               <tr>
-                <th className="p-4 font-black text-[10px] uppercase tracking-widest">Company & Owner</th>
-                <th className="p-4 font-black text-[10px] uppercase tracking-widest">Contact</th>
-                <th className="p-4 font-black text-[10px] uppercase tracking-widest">Subscription Plan</th>
-                <th className="p-4 font-black text-[10px] uppercase tracking-widest">Status</th>
-                <th className="p-4 font-black text-[10px] uppercase tracking-widest text-center">Actions</th>
+                <th className="p-4 font-black text-[10px] uppercase tracking-widest">{t('Company & Owner')}</th>
+                <th className="p-4 font-black text-[10px] uppercase tracking-widest">{t('Contact')}</th>
+                <th className="p-4 font-black text-[10px] uppercase tracking-widest">{t('Subscription Plan')}</th>
+                <th className="p-4 font-black text-[10px] uppercase tracking-widest">{t('Status')}</th>
+                <th className="p-4 font-black text-[10px] uppercase tracking-widest text-center">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -490,7 +492,7 @@ const Companies = () => {
                       <div className="flex flex-col gap-1 items-start">
                         {companyIsTrial ? (
                           <span className="px-2.5 py-0.5 bg-violet-100 text-violet-800 rounded-lg text-[9px] font-black uppercase tracking-wider border border-violet-200 flex items-center gap-1">
-                            <Sparkles size={10} className="text-violet-600" /> Free Trial (7 Days)
+                            <Sparkles size={10} className="text-violet-600" /> {t('Free Trial (7 Days)')}
                           </span>
                         ) : (
                           <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-lg text-[9px] font-black uppercase tracking-wider border border-indigo-200 flex items-center gap-1">
@@ -502,7 +504,7 @@ const Companies = () => {
                           <span className={`text-[9px] font-extrabold uppercase tracking-widest flex items-center gap-1 ${
                             getDaysLeft(c) === 'Expired' ? 'text-rose-600' : 'text-emerald-600'
                           }`}>
-                            <Clock size={10} /> {getDaysLeft(c)}
+                            <Clock size={10} /> {t(getDaysLeft(c))}
                           </span>
                         )}
                       </div>
@@ -518,7 +520,7 @@ const Companies = () => {
                           : 'bg-amber-50 text-amber-700 border-amber-200'
                       }`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${c.status === 'active' ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-                        {c.status}
+                        {t(c.status || 'Active')}
                       </span>
                     </td>
 
@@ -572,8 +574,8 @@ const Companies = () => {
                 <tr>
                   <td colSpan="5" className="p-12 text-center text-slate-400">
                     <Building2 size={32} className="mx-auto text-slate-300 mb-2" />
-                    <p className="text-[12px] font-black text-slate-600 uppercase tracking-widest">No companies found</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Try changing your search term or filter tab</p>
+                    <p className="text-[12px] font-black text-slate-600 uppercase tracking-widest">{t('No companies found')}</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">{t('Try changing your search term or filter tab')}</p>
                   </td>
                 </tr>
               )}

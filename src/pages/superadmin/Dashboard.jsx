@@ -35,14 +35,14 @@ const StatCard = ({ title, value, icon, trend, trendValue, color }) => (
 );
 
 const Dashboard = () => {
-  const { formatDate } = useSettings();
+  const { formatDate, formatCurrency, t } = useSettings();
   const [stats, setStats] = useState({ totalCompanies: 0, activeCompanies: 0, monthlyRevenue: 0, totalAdmins: 0, totalEmployees: 0, activePlans: 0, chartData: [], recentActivity: [] });
   const [recentCompanies, setRecentCompanies] = useState([]);
   const [availablePlans, setAvailablePlans] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const formatLogDetails = (details) => {
-    if (!details) return 'Action Executed';
+    if (!details) return t('Action Executed');
     try {
       const parsed = typeof details === 'string' ? JSON.parse(details) : details;
       if (typeof parsed === 'object' && parsed !== null) {
@@ -163,29 +163,29 @@ const Dashboard = () => {
       <div className="flex items-center justify-between no-print">
         <div>
           <h1 className="text-xl font-black text-slate-800 uppercase tracking-tighter">
-            SuperAdmin Dashboard
+            {t('SuperAdmin Dashboard')}
           </h1>
           <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest leading-none mt-1">
-            Platform overview and key metrics
+            {t('Platform overview and key metrics')}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button 
             onClick={handleGenerateReport}
             disabled={isGenerating}
-            className={`px-4 py-2 bg-slate-800 text-white rounded-lg text-[11px] font-black uppercase tracking-widest shadow-md transition-colors ${isGenerating ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-700'}`}
+            className={`px-4 py-2 bg-slate-800 text-white rounded-lg text-[11px] font-black uppercase tracking-widest shadow-md transition-colors cursor-pointer ${isGenerating ? 'opacity-70 cursor-not-allowed' : 'hover:bg-slate-700'}`}
           >
-            {isGenerating ? 'Generating PDF...' : 'Generate Report'}
+            {isGenerating ? t('Generating PDF...') : t('Generate Report')}
           </button>
         </div>
       </div>
       
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Companies" value={stats.totalCompanies} icon={<Building2 />} trend="up" trendValue={`${stats.activeCompanies || 0} Active`} color="bg-indigo-500" />
-        <StatCard title="Total Revenue" value={`₹${(stats.monthlyRevenue || 0).toLocaleString('en-IN')}`} icon={<CreditCard />} trend="up" trendValue="Earnings" color="bg-emerald-500" />
-        <StatCard title="Active Plans" value={stats.activePlans} icon={<Activity />} trend="up" trendValue={`${stats.activePlans || 0} Paid`} color="bg-amber-500" />
-        <StatCard title="Total Employees" value={stats.totalEmployees} icon={<Users />} trend="up" trendValue={`${stats.totalEmployees || 0} Staff`} color="bg-sky-500" />
+        <StatCard title={t('Total Companies')} value={stats.totalCompanies} icon={<Building2 />} trend="up" trendValue={`${stats.activeCompanies || 0} ${t('Active')}`} color="bg-indigo-500" />
+        <StatCard title={t('Total Revenue')} value={formatCurrency(stats.monthlyRevenue || 0)} icon={<CreditCard />} trend="up" trendValue={t('Earnings')} color="bg-emerald-500" />
+        <StatCard title={t('Active Plans')} value={stats.activePlans} icon={<Activity />} trend="up" trendValue={`${stats.activePlans || 0} ${t('Paid')}`} color="bg-amber-500" />
+        <StatCard title={t('Total Employees')} value={stats.totalEmployees} icon={<Users />} trend="up" trendValue={`${stats.totalEmployees || 0} ${t('Staff')}`} color="bg-sky-500" />
       </div>
 
       {/* Charts Section */}
@@ -193,16 +193,16 @@ const Dashboard = () => {
         <div className="lg:col-span-2 card bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">Platform Growth</h3>
-              <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Revenue vs Signups</p>
+              <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">{t('Platform Growth')}</h3>
+              <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">{t('Revenue vs Signups')}</p>
             </div>
             <select 
-              className="bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5 text-[10px] font-black text-slate-500 uppercase tracking-tighter shadow-sm"
+              className="bg-slate-50 border border-slate-100 rounded-lg px-3 py-1.5 text-[10px] font-black text-slate-500 uppercase tracking-tighter shadow-sm cursor-pointer"
               value={chartFilter}
               onChange={(e) => setChartFilter(Number(e.target.value))}
             >
-              <option value={7}>Last 7 Days</option>
-              <option value={30}>Last 30 Days</option>
+              <option value={7}>{t('Last 7 Days')}</option>
+              <option value={30}>{t('Last 30 Days')}</option>
             </select>
           </div>
           <div className="h-[300px] w-full min-h-[300px]">
@@ -225,7 +225,7 @@ const Dashboard = () => {
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', fontSize: '11px' }}
                   itemStyle={{ fontWeight: '900', textTransform: 'uppercase', fontSize: '9px' }}
                 />
-                <Area type="monotone" dataKey="revenue" name="Revenue (₹)" stroke="#4F46E5" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" animationDuration={1500} />
+                <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#4F46E5" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" animationDuration={1500} />
                 <Area type="monotone" dataKey="signups" name="New Signups" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorSignups)" animationDuration={1500} />
               </AreaChart>
             </ResponsiveContainer>
@@ -235,19 +235,19 @@ const Dashboard = () => {
         {/* Recent Activity */}
         <div className="card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
           <div>
-            <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">Recent Activity</h3>
-            <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Platform Audit Logs</p>
+            <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">{t('Recent Activity')}</h3>
+            <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">{t('Platform Audit Logs')}</p>
           </div>
           <div className="mt-4 flex-1 overflow-y-auto max-h-[300px] space-y-3 custom-scrollbar pr-2">
             {stats.recentActivity && stats.recentActivity.length > 0 ? stats.recentActivity.map((log, i) => (
               <div key={i} className="flex flex-col p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500 mb-1">{log.action.replace(/_/g, ' ')}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500 mb-1">{t(log.action.replace(/_/g, ' '))}</span>
                 <span className="text-[11px] font-bold text-slate-600 truncate">{formatLogDetails(log.details)}</span>
                 <span className="text-[9px] font-bold text-slate-400 mt-1">{formatDate(log.created_at, true)}</span>
               </div>
             )) : (
               <div className="flex items-center justify-center h-full text-[10px] font-black text-slate-400 uppercase tracking-widest py-10">
-                No recent activity
+                {t('No recent activity')}
               </div>
             )}
           </div>
@@ -257,16 +257,15 @@ const Dashboard = () => {
       {/* Recent Companies Table */}
       <div className="card bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-4">
         <div className="p-5 border-b border-slate-50 flex items-center justify-between">
-          <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">Recently Onboarded</h3>
-          <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">View All</button>
+          <h3 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">{t('Recently Onboarded')}</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50/50">
-                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">Company Name</th>
-                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">Plan</th>
-                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">Status</th>
+                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">{t('Company Name')}</th>
+                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">{t('Plan')}</th>
+                <th className="p-4 font-black text-slate-400 text-[9px] uppercase tracking-widest">{t('Status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -281,12 +280,12 @@ const Dashboard = () => {
                   </td>
                   <td className="p-4">
                     <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm ${c.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
-                      {c.status || 'Pending'}
+                      {t(c.status || 'Pending')}
                     </span>
                   </td>
                 </tr>
               )) : (
-                <tr><td colSpan="3" className="p-8 text-center text-[11px] font-black text-slate-400 uppercase tracking-widest">No recent signups.</td></tr>
+                <tr><td colSpan="3" className="p-8 text-center text-[11px] font-black text-slate-400 uppercase tracking-widest">{t('No recent signups.')}</td></tr>
               )}
             </tbody>
           </table>

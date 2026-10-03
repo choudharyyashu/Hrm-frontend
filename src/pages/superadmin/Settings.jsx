@@ -55,7 +55,7 @@ const TextAreaField = ({ label, value, onChange, placeholder = '', rows = 3 }) =
 );
 
 const Settings = () => {
-  const { setLocalization } = useSettings();
+  const { setLocalization, t } = useSettings();
   const [activeTab, setActiveTab] = useState('general');
   const [saved, setSaved] = useState(false);
 
@@ -112,11 +112,11 @@ const Settings = () => {
   });
 
   const tabs = [
-    { id: 'general', label: 'General', icon: <Globe size={15} /> },
-    { id: 'company', label: 'Company Info', icon: <Building2 size={15} /> },
-    { id: 'social', label: 'Social Media', icon: <Share2 size={15} /> },
-    { id: 'legal', label: 'Legal', icon: <Shield size={15} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={15} /> },
+    { id: 'general', label: t('General'), icon: <Globe size={15} /> },
+    { id: 'company', label: t('Company Info'), icon: <Building2 size={15} /> },
+    { id: 'social', label: t('Social Media'), icon: <Share2 size={15} /> },
+    { id: 'legal', label: t('Legal'), icon: <Shield size={15} /> },
+    { id: 'notifications', label: t('Notifications'), icon: <Bell size={15} /> },
   ];
 
   React.useEffect(() => {
@@ -204,10 +204,10 @@ const Settings = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-xl font-black text-slate-800 uppercase tracking-tighter">
-            Platform Settings
+            {t('Platform Settings')}
           </h1>
           <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest leading-none mt-1">
-            Configure global platform preferences
+            {t('Configure global platform preferences')}
           </p>
         </div>
         <button
@@ -219,7 +219,7 @@ const Settings = () => {
           }`}
         >
           {saved ? <CheckCircle2 size={15} /> : <Save size={15} />}
-          {saved ? 'Saved!' : 'Save Changes'}
+          {saved ? t('Saved!') : t('Save Changes')}
         </button>
       </div>
 
@@ -266,33 +266,30 @@ const Settings = () => {
                       </div>
                       <div>
                         <h3 className="text-[12px] font-black text-slate-700 uppercase tracking-widest">
-                          Platform & Branding Names
+                          {t('Platform & Branding Names')}
                         </h3>
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-                          Separate settings for Website Title and Powered By banner
+                          {t('Separate settings for website title and powered by banner')}
                         </p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <InputField
-                        label="Platform / Website Title (Navbar & Logo Name)"
+                        label={t('Platform / Website Title (Navbar & Logo Name)')}
                         value={general.platform_name}
                         onChange={v => setGeneral({...general, platform_name: v})}
                         placeholder="HR PILOT PRO SYSTEM"
                         icon={<Globe size={14} />}
                       />
                       <InputField
-                        label="Powered By Attribution (Top Marquee Banner)"
+                        label={t('Powered by Attribution (Top Marquee Banner)')}
                         value={general.powered_by}
                         onChange={v => setGeneral({...general, powered_by: v})}
                         placeholder="Kiaan Technology"
                         icon={<Building2 size={14} />}
                       />
                     </div>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-3 ml-1">
-                      💡 "Platform Title" will be shown next to the logo on top header, while "Powered By" will appear in the top scrolling marquee ("POWERED BY {general.powered_by || 'KIAAN TECHNOLOGY'}").
-                    </p>
                   </div>
 
                   {/* Localization */}
@@ -303,10 +300,10 @@ const Settings = () => {
                       </div>
                       <div>
                         <h3 className="text-[12px] font-black text-slate-700 uppercase tracking-widest">
-                          Country, Currency & Localization
+                          {t('Country, Currency & Localization')}
                         </h3>
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-                          Set global platform country, base currency, language and time formatting
+                          {t('Set global platform country, base currency, language and time formatting')}
                         </p>
                       </div>
                     </div>
@@ -314,7 +311,7 @@ const Settings = () => {
                       {/* Country Selector */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          Primary Operating Country
+                          {t('Primary Operating Country')}
                         </label>
                         <select
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[13px] font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all cursor-pointer"
@@ -342,7 +339,7 @@ const Settings = () => {
                       {/* Currency Selector */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          Default Currency
+                          {t('Default Currency')}
                         </label>
                         <select
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[13px] font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all cursor-pointer"
@@ -360,7 +357,7 @@ const Settings = () => {
                       {/* Language Selector */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          Default Platform Language
+                          {t('Default Platform Language')}
                         </label>
                         <select
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[13px] font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all cursor-pointer"
@@ -378,7 +375,7 @@ const Settings = () => {
                       {/* Timezone Selector */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          Default Timezone
+                          {t('Default Timezone')}
                         </label>
                         <div className="relative">
                           <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -401,7 +398,7 @@ const Settings = () => {
                       {/* Date Format */}
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          Date Format
+                          {t('Default Date Format')}
                         </label>
                         <select 
                           value={general.date_format}

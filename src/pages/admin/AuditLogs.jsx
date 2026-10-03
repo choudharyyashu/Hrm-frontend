@@ -18,13 +18,14 @@ import {
   Layers,
   Sparkles,
   Eye,
+  Trash2,
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AuditLogs = () => {
   const { t } = useSettings();
-  const { showAlert } = useUI();
+  const { showAlert, showConfirm } = useUI();
 
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState({ today: 0, thisWeek: 0, total: 0, topActions: [] });
@@ -103,6 +104,51 @@ const AuditLogs = () => {
     setStartDate('');
     setEndDate('');
     setPage(1);
+  };
+
+  const handleDeleteLog = async (e, id) => {
+    if (e) e.stopPropagation();
+    const confirmed = await showConfirm({
+      title: t('Delete Audit Record'),
+      message: t('Are you sure you want to permanently delete this audit log record?'),
+      confirmText: t('Delete Record'),
+      cancelText: t('Cancel'),
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/audit-logs/${id}`);
+      showAlert(t('Audit log record deleted successfully'), 'success');
+      fetchLogs();
+      fetchStats();
+    } catch (err) {
+      console.error('Failed to delete audit log:', err);
+      showAlert(err.response?.data?.message || t('Failed to delete audit record'), 'error');
+    }
+  };
+
+  const handleClearAllLogs = async () => {
+    const confirmed = await showConfirm({
+      title: t('Clear All Audit Logs'),
+      message: t('Are you sure you want to clear ALL audit logs? This action cannot be undone.'),
+      confirmText: t('Clear All'),
+      cancelText: t('Cancel'),
+      type: 'danger'
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await api.delete('/audit-logs/clear-all');
+      showAlert(t('All audit logs cleared successfully'), 'success');
+      fetchLogs();
+      fetchStats();
+    } catch (err) {
+      console.error('Failed to clear audit logs:', err);
+      showAlert(err.response?.data?.message || t('Failed to clear audit logs'), 'error');
+    }
   };
 
   const getActionBadgeColor = (action = '') => {
@@ -325,12 +371,23 @@ const AuditLogs = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          {logs.length > 0 && (
+            <button
+              onClick={handleClearAllLogs}
+              className="flex items-center gap-2 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold text-xs rounded-xl shadow-sm transition-all cursor-pointer"
+              title={t('Clear All Audit Records')}
+            >
+              <Trash2 size={14} />
+              <span className="hidden sm:inline">{t('Clear All')}</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
               fetchStats();
               fetchLogs();
             }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs rounded-xl shadow-sm transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs rounded-xl shadow-sm transition-all cursor-pointer"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             <span>{t('Refresh')}</span>
@@ -455,7 +512,7 @@ const AuditLogs = () => {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="w-full py-2.5 text-center text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all"
+              className="w-full py-2.5 text-center text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all cursor-pointer"
             >
               {t('Reset')}
             </button>
@@ -465,16 +522,16 @@ const AuditLogs = () => {
 
       {/* Logs Table */}
       <div className="card !p-0 overflow-hidden border border-slate-100 shadow-sm">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-y-auto max-h-[380px] custom-scrollbar">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-50 border-b border-slate-100">
+            <thead className="bg-slate-50 border-b border-slate-100 sticky top-0 z-10 shadow-2xs">
               <tr>
                 <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Performer / Admin')}</th>
                 <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Action')}</th>
                 <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Target ID')}</th>
                 <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Details')}</th>
                 <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Date & Time')}</th>
-                <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest text-center">{t('View')}</th>
+                <th className="p-4 font-black text-slate-400 text-[10px] uppercase tracking-widest text-center">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -535,15 +592,26 @@ const AuditLogs = () => {
                       {new Date(log.created_at).toLocaleString()}
                     </td>
 
-                    {/* View Details Button */}
-                    <td className="p-4 text-center">
-                      <button
-                        onClick={() => setSelectedLog(log)}
-                        className="p-1.5 hover:bg-slate-100 text-slate-500 hover:text-indigo-600 rounded-lg transition-colors cursor-pointer"
-                        title={t('View Full Event Details')}
-                      >
-                        <Eye size={16} />
-                      </button>
+                    {/* Actions: View & Delete */}
+                    <td className="p-4 text-center whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLog(log)}
+                          className="p-1.5 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 rounded-lg transition-colors cursor-pointer"
+                          title={t('View Full Event Details')}
+                        >
+                          <Eye size={15} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => handleDeleteLog(e, log.id)}
+                          className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg transition-colors cursor-pointer"
+                          title={t('Delete Record')}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -609,53 +677,77 @@ const AuditLogs = () => {
                   </button>
                 </div>
 
-                <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                  {/* Performer & Action Card */}
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">{t('Performer')}</p>
-                      <p className="text-xs font-bold text-slate-800 mt-0.5">{selectedLog.admin_name || 'System'}</p>
-                      <p className="text-[10px] font-medium text-slate-500">{selectedLog.admin_email || 'N/A'}</p>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">{t('Performer / Admin')}</p>
+                      <p className="text-xs font-bold text-slate-800 mt-0.5">{selectedLog.admin_name || 'System / Auto'}</p>
+                      <p className="text-[10px] font-semibold text-slate-400 mt-0.5">{selectedLog.admin_email || selectedLog.admin_role || 'system'}</p>
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">{t('Action & Target')}</p>
-                      <p className="text-xs font-bold text-indigo-600 mt-0.5">{selectedLog.action}</p>
-                      <p className="text-[10px] font-medium text-slate-500">Target ID: {selectedLog.target_id || 'N/A'}</p>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">{t('Action Performed')}</p>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border mt-1 ${getActionBadgeColor(selectedLog.action)}`}>
+                        {selectedLog.action}
+                      </span>
+                      {selectedLog.target_id && (
+                        <p className="text-[10px] font-bold text-slate-500 mt-1">Target ID: #{selectedLog.target_id}</p>
+                      )}
                     </div>
                   </div>
 
-                  {/* Formatted Attributes */}
-                  {isObj && Object.keys(parsedDetails).length > 0 && (
+                  {/* Formatted Event Details */}
+                  {isObj && Object.keys(parsedDetails).length > 0 ? (
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">{t('Structured Event Data')}</p>
-                      <div className="grid grid-cols-2 gap-2 bg-slate-50/80 p-3 rounded-xl border border-slate-100">
-                        {Object.entries(parsedDetails).map(([key, val]) => (
-                          <div key={key} className="bg-white p-2.5 rounded-lg border border-slate-200/70 shadow-2xs">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">
-                              {key.replace(/_/g, ' ')}
-                            </span>
-                            <span className="text-xs font-bold text-slate-800 mt-0.5 block break-words">
-                              {typeof val === 'object' && val !== null ? JSON.stringify(val) : String(val ?? '—')}
-                            </span>
-                          </div>
-                        ))}
+                      <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">{t('Event Summary & Parameters')}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50/80 p-3 rounded-2xl border border-slate-100">
+                        {Object.entries(parsedDetails).map(([key, val]) => {
+                          const formattedKey = key.replace(/_/g, ' ').toUpperCase();
+                          let displayValue = String(val ?? '—');
+                          
+                          if (key === 'email_sent' || key === 'whatsapp_sent') {
+                            displayValue = Number(val) > 0 ? t('Sent') : t('Not Sent / Pending');
+                          } else if (typeof val === 'boolean') {
+                            displayValue = val ? t('Yes') : t('No');
+                          } else if (typeof val === 'object' && val !== null) {
+                            displayValue = JSON.stringify(val);
+                          }
+
+                          return (
+                            <div key={key} className="bg-white p-3 rounded-xl border border-slate-200/70 shadow-2xs flex flex-col justify-between">
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block">
+                                {t(formattedKey)}
+                              </span>
+                              <span className="text-xs font-bold text-slate-800 mt-1 block break-words">
+                                {displayValue}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                      <p className="text-xs font-bold text-slate-600">{String(selectedLog.details || t('No additional details recorded for this event.'))}</p>
                     </div>
                   )}
 
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">{t('Raw Event Payload')}</p>
-                    <pre className="p-3.5 bg-slate-900 text-emerald-400 rounded-xl text-xs font-mono overflow-x-auto whitespace-pre-wrap max-h-48">
-                      {typeof selectedLog.details === 'object'
-                        ? JSON.stringify(selectedLog.details, null, 2)
-                        : (selectedLog.details || 'No additional payload.')}
-                    </pre>
+                  {/* Timestamp & Verification */}
+                  <div className="p-3 rounded-xl bg-indigo-50/60 border border-indigo-100/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-indigo-700">
+                      <Clock size={14} />
+                      <span className="text-[11px] font-bold">{t('Timestamp')}: {new Date(selectedLog.created_at).toLocaleString()}</span>
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-indigo-500 bg-white px-2 py-0.5 rounded border border-indigo-200 shadow-2xs">
+                      {t('Verified Log')}
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
                   <button
                     onClick={() => setSelectedLog(null)}
-                    className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl transition-all"
+                    className="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl transition-all cursor-pointer shadow-sm"
                   >
                     {t('Close')}
                   </button>
@@ -668,5 +760,6 @@ const AuditLogs = () => {
     </div>
   );
 };
+
 
 export default AuditLogs;
