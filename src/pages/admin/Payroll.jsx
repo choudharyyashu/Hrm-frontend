@@ -454,8 +454,8 @@ const Payroll = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto custom-scrollbar w-full">
+          <table className="w-full min-w-[760px]">
             <thead>
               <tr className="text-left border-b border-slate-50">
                 <th className="pb-4 pl-4 font-bold text-slate-400 text-xs uppercase tracking-wider">{t('Employee')}</th>

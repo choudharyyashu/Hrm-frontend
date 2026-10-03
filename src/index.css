@@ -382,6 +382,7 @@ body {
   * {
     color: black !important;
     -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .text-primary,
@@ -389,6 +390,7 @@ body {
     color: #4F46E5 !important;
     background-color: #4F46E5 !important;
     -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   @page {

@@ -178,8 +178,8 @@ const ClaimsManagement = () => {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full min-w-[800px] text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="py-5 pl-8 font-black text-slate-400 text-xs uppercase tracking-widest">{t('Employee')}</th>

@@ -184,8 +184,8 @@ const MyAttendance = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="text-left bg-slate-50/50 border-b border-slate-100">
                 <th className="py-4 pl-8 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Date / Cycle')}</th>

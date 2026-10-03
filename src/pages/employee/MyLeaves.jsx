@@ -96,8 +96,8 @@ const MyLeaves = () => {
         </div>
 
         {/* History Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full min-w-[700px] text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="py-4 pl-8 font-black text-slate-400 text-[10px] uppercase tracking-widest">{t('Requested Duration')}</th>

@@ -440,8 +440,8 @@ const Companies = () => {
 
       {/* Main Companies Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm whitespace-nowrap">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full min-w-[700px] text-left text-sm whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-600 font-medium border-b border-slate-100">
               <tr>
                 <th className="p-4 font-black text-[10px] uppercase tracking-widest">{t('Company & Owner')}</th>

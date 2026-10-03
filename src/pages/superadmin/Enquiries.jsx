@@ -117,8 +117,8 @@ const Enquiries = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm whitespace-nowrap">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full min-w-[700px] text-left text-sm whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-600 font-medium border-b border-slate-100">
               <tr>
                 <th className="p-4 w-10">
@@ -200,7 +200,7 @@ const Enquiries = () => {
                 </div>
                 
                 <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email Address</p>
                       <p className="font-bold text-slate-800 text-sm truncate"><a href={`mailto:${selectedEnquiry.email}`} className="text-primary hover:underline">{selectedEnquiry.email}</a></p>

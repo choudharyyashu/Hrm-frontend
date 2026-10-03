@@ -57,7 +57,7 @@ export const UIProvider = ({ children }) => {
       {children}
       
       {/* GLOBAL TOAST RENDERER */}
-      <div className="fixed top-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
+      <div className="fixed top-4 sm:top-6 right-3 sm:right-6 left-3 sm:left-auto z-[9999] flex flex-col gap-2.5 sm:gap-3 pointer-events-none max-w-[calc(100vw-24px)]">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
@@ -65,7 +65,7 @@ export const UIProvider = ({ children }) => {
               initial={{ opacity: 0, y: -20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-              className="pointer-events-auto flex items-center gap-3 bg-white p-4 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 min-w-[300px] overflow-hidden relative"
+              className="pointer-events-auto flex items-center gap-3 bg-white p-3 sm:p-4 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 min-w-0 sm:min-w-[300px] w-full sm:w-auto overflow-hidden relative"
             >
               {/* Colored Side Bar */}
               <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${
@@ -74,24 +74,24 @@ export const UIProvider = ({ children }) => {
                 toast.type === 'warning' ? 'bg-amber-500' : 'bg-primary'
               }`} />
               
-              <div className={`p-2 rounded-xl ${
+              <div className={`p-2 rounded-xl shrink-0 ${
                 toast.type === 'success' ? 'bg-emerald-50 text-emerald-600' :
                 toast.type === 'error' ? 'bg-rose-50 text-rose-600' :
                 toast.type === 'warning' ? 'bg-amber-50 text-amber-600' : 'bg-primary/10 text-primary'
               }`}>
-                {toast.type === 'success' && <CheckCircle2 size={20} />}
-                {toast.type === 'error' && <AlertCircle size={20} />}
-                {toast.type === 'warning' && <AlertTriangle size={20} />}
-                {toast.type === 'info' && <Info size={20} />}
+                {toast.type === 'success' && <CheckCircle2 size={18} className="sm:w-5 sm:h-5" />}
+                {toast.type === 'error' && <AlertCircle size={18} className="sm:w-5 sm:h-5" />}
+                {toast.type === 'warning' && <AlertTriangle size={18} className="sm:w-5 sm:h-5" />}
+                {toast.type === 'info' && <Info size={18} className="sm:w-5 sm:h-5" />}
               </div>
               
-              <div className="flex-1 pr-4">
-                <p className="text-sm font-bold text-slate-800">{toast.message}</p>
+              <div className="flex-1 min-w-0 pr-2 sm:pr-4">
+                <p className="text-xs sm:text-sm font-bold text-slate-800 break-words">{toast.message}</p>
               </div>
 
               <button 
                 onClick={() => removeToast(toast.id)}
-                className="text-slate-400 hover:text-slate-600 transition-colors p-1"
+                className="text-slate-400 hover:text-slate-600 transition-colors p-1 shrink-0 cursor-pointer"
               >
                 <X size={16} />
               </button>
@@ -103,7 +103,7 @@ export const UIProvider = ({ children }) => {
       {/* GLOBAL CONFIRM DIALOG RENDERER */}
       <AnimatePresence>
         {confirmDialog && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center px-4">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4">
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
@@ -116,8 +116,7 @@ export const UIProvider = ({ children }) => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl shadow-2xl p-5 md:p-6 w-full mx-4 relative z-10 overflow-hidden"
-              style={{ maxWidth: '400px' }}
+              className="bg-white rounded-3xl shadow-2xl p-5 md:p-6 w-full max-w-[420px] relative z-10 overflow-hidden"
             >
               <div className={`absolute -top-16 -right-16 w-32 h-32 rounded-full blur-2xl opacity-20 pointer-events-none ${
                 confirmDialog.type === 'danger' || confirmDialog.type === 'warning' ? 'bg-rose-500' : 'bg-primary'
