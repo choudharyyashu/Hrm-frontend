@@ -31,7 +31,17 @@ export const SiteInfoProvider = ({ children }) => {
     try {
       const res = await axios.get(`${API_BASE}/public/site-info`);
       if (res.data && Object.keys(res.data).length > 0) {
-        setSiteInfo(prev => ({ ...prev, ...res.data }));
+        const cleanData = { ...res.data };
+        if (!cleanData.platform_name || cleanData.platform_name === 'HRM Software Pro' || cleanData.platform_name === 'Nexus HRM Pro') {
+          cleanData.platform_name = 'HR Pilot Pro';
+        }
+        if (!cleanData.company_name || cleanData.company_name === 'HRM Software Pro' || cleanData.company_name === 'Nexus HRM Pro') {
+          cleanData.company_name = 'HR Pilot Pro';
+        }
+        if (!cleanData.company_logo || cleanData.company_logo.startsWith('data:image')) {
+          cleanData.company_logo = '/logo.png';
+        }
+        setSiteInfo(prev => ({ ...prev, ...cleanData }));
       }
     } catch (err) {
       console.error('Failed to fetch site info:', err);

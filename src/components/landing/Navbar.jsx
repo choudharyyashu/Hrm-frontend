@@ -125,18 +125,14 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" onClick={(e) => handleScrollToSection(e, '/')} className="flex items-center gap-3 group">
-              {siteInfo.company_logo ? (
-                <div className="h-11 w-11 sm:h-12 sm:w-12 bg-white rounded-2xl p-1 flex items-center justify-center shadow-lg shadow-cyan-500/25 border border-white/40 group-hover:scale-105 group-hover:shadow-cyan-400/40 transition-all duration-300 shrink-0">
-                  <img src={siteInfo.company_logo} alt={productTitle} className="h-full w-full object-contain" />
-                </div>
-              ) : (
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/50 blur-md rounded-xl group-hover:bg-primary/80 transition-all duration-300"></div>
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-heading font-bold text-xl relative z-10 border border-white/20 group-hover:scale-105 transition-transform duration-300">
-                    {logoLetter}
-                  </div>
-                </div>
-              )}
+              <div className="h-11 w-11 sm:h-12 sm:w-12 bg-white rounded-2xl p-1 flex items-center justify-center shadow-lg shadow-cyan-500/25 border border-white/40 group-hover:scale-105 group-hover:shadow-cyan-400/40 transition-all duration-300 shrink-0">
+                <img 
+                  src={siteInfo.company_logo && !siteInfo.company_logo.startsWith('data:image') ? siteInfo.company_logo : '/logo.png'} 
+                  alt={productTitle} 
+                  className="h-full w-full object-contain"
+                  onError={(e) => { e.currentTarget.src = '/logo.png'; }}
+                />
+              </div>
               {(() => {
                 const parts = productTitle.trim().split(' ');
                 if (parts.length > 1) {

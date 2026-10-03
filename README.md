@@ -1,31 +1,16 @@
-# HRM Frontend
+# React + Vite
 
-Frontend for HRM (Human Resource Management) SaaS Application built with React, Vite, and TailwindCSS.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Getting Started
+Currently, two official plugins are available:
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-### Installation
-```bash
-# Install dependencies
-npm install
-```
+## React Compiler
 
-### Environment Variables
-Copy `.env.example` to `.env` and configure the backend API URL:
-```bash
-cp .env.example .env
-```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-### Run Development Server
-```bash
-npm run dev
-```
+## Expanding the ESLint configuration
 
-### Build for Production
-```bash
-npm run build
-```
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

@@ -353,8 +353,8 @@ const Employees = () => {
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black tracking-tight">
                     {isUnlimited 
-                      ? `${totalEmployees} Employees` 
-                      : `${totalEmployees} / ${employeeLimit} Employees`
+                      ? `${totalEmployees} ${t('Employees')}` 
+                      : `${totalEmployees} / ${employeeLimit} ${t('Employees')}`
                     }
                   </span>
                   <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider border ${
@@ -365,15 +365,15 @@ const Employees = () => {
                       : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                   }`}>
                     {isLimitReached 
-                      ? 'Limit Full' 
+                      ? t('Limit Full') 
                       : isUnlimited 
-                      ? 'Unlimited Plan' 
-                      : `${remainingSlots} Left`
+                      ? t('Unlimited Plan') 
+                      : `${remainingSlots} ${t('Left')}`
                     }
                   </span>
                 </div>
                 <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                  Plan: <strong className="text-slate-600">{planInfo.plan_name || 'Active Plan'}</strong>
+                  {t('Plan')}: <strong className="text-slate-600">{planInfo.plan_name || t('Active Plan')}</strong>
                 </p>
               </div>
 
@@ -383,7 +383,7 @@ const Employees = () => {
                   className="ml-1 px-2.5 py-1.5 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white text-[10px] font-black uppercase tracking-wider rounded-xl shadow-xs transition-all flex items-center gap-1 cursor-pointer"
                   title="Upgrade Plan to add more employees"
                 >
-                  <span>Upgrade</span>
+                  <span>{t('Upgrade')}</span>
                   <ArrowRight size={11} />
                 </button>
               )}
@@ -453,9 +453,9 @@ const Employees = () => {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {loading ? (
-                <tr><td colSpan="8" className="py-20 text-center text-xs font-black text-slate-400 uppercase tracking-widest animate-pulse">Fetching Data...</td></tr>
+                <tr><td colSpan="8" className="py-20 text-center text-xs font-black text-slate-400 uppercase tracking-widest animate-pulse">{t('Fetching Data...')}</td></tr>
               ) : filteredEmployees.length === 0 ? (
-                <tr><td colSpan="8" className="py-20 text-center text-xs font-black text-slate-400 uppercase tracking-widest">No records found</td></tr>
+                <tr><td colSpan="8" className="py-20 text-center text-xs font-black text-slate-400 uppercase tracking-widest">{t('No records found')}</td></tr>
               ) : (
                 filteredEmployees.map((emp, index) => (
                   <tr key={emp.id} className="group hover:bg-slate-50/80 transition-colors">
@@ -471,12 +471,12 @@ const Employees = () => {
                           <p className="text-[12px] font-black text-slate-800 leading-none">{emp.name}</p>
                           <div className="flex items-center gap-2 mt-1.5">
                             <span className="text-[8px] font-black text-primary uppercase tracking-tighter bg-indigo-50 px-1.5 py-0.5 rounded border border-primary/10">
-                              ID: {emp.custom_id}
+                              {t('ID')}: {emp.custom_id}
                             </span>
                             {emp.contribution_applicable === 1 || emp.contribution_applicable === true || emp.contribution_applicable === '1' ? (
-                              <span className="text-[7px] font-black bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-200/60 uppercase">Contrib Active</span>
+                              <span className="text-[7px] font-black bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-200/60 uppercase">{t('Contrib Active')}</span>
                             ) : (
-                              <span className="text-[7px] font-black bg-slate-50 text-slate-400 px-1.5 py-0.5 rounded border border-slate-200 uppercase">Not Applicable</span>
+                              <span className="text-[7px] font-black bg-slate-50 text-slate-400 px-1.5 py-0.5 rounded border border-slate-200 uppercase">{t('Not Applicable')}</span>
                             )}
                           </div>
                         </div>
@@ -484,12 +484,12 @@ const Employees = () => {
                     </td>
                     <td className="py-3">
                       <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg border uppercase tracking-widest ${(emp.role || '').toLowerCase().includes('admin') ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
-                        {emp.role}
+                        {t(emp.role)}
                       </span>
                     </td>
                     <td className="py-3 text-center">
                       <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${emp.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
-                        {emp.status}
+                        {t(emp.status)}
                       </span>
                     </td>
                     <td className="py-3 text-[11px] font-bold text-slate-500 italic">
@@ -504,18 +504,18 @@ const Employees = () => {
                         if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
                         return (
                           <span className="text-[11px] font-black text-slate-700 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100">
-                            {age} <span className="text-[8px] font-bold text-slate-400 uppercase">yrs</span>
+                            {age} <span className="text-[8px] font-bold text-slate-400 uppercase">{t('yrs')}</span>
                           </span>
                         );
                       })() : (
-                        <span className="text-[9px] font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded border border-amber-100">N/A</span>
+                        <span className="text-[9px] font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded border border-amber-100">{t('N/A')}</span>
                       )}
                     </td>
                     <td className="py-3 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <div>
                           <span className="text-[11px] font-black text-slate-700">{formatCurrency(emp.salary_rate)}</span>
-                          <span className="text-[8px] font-black text-primary uppercase tracking-tighter ml-1">{emp.salary_type}</span>
+                          <span className="text-[8px] font-black text-primary uppercase tracking-tighter ml-1">{t(emp.salary_type)}</span>
                         </div>
                         {emp.contribution_applicable === 1 || emp.contribution_applicable === true || emp.contribution_applicable === '1' ? (
                           <button 
@@ -524,7 +524,7 @@ const Employees = () => {
                             title="Click for Contribution Breakdown"
                           >
                             <span className="text-[7px] font-black text-emerald-600 uppercase tracking-widest leading-none flex items-center gap-0.5">
-                              Contributions ↗
+                              {t('Contributions')} ↗
                             </span>
                             <span className="text-[10px] font-black text-emerald-700 mt-0.5">
                               {formatCurrency(emp.total_contribution_total || emp.total_cpf_total || (parseFloat(emp.total_employee_contribution || emp.total_cpf_employee || emp.total_uif_collected || 0) + parseFloat(emp.total_employer_contribution || emp.total_cpf_employer || 0)))}
@@ -532,7 +532,7 @@ const Employees = () => {
                           </button>
                         ) : (
                           <span className="text-[8px] font-black text-slate-400 bg-slate-100/80 px-2 py-0.5 rounded-lg border border-slate-200/60 uppercase tracking-wider">
-                            Not Applicable
+                            {t('Not Applicable')}
                           </span>
                         )}
                       </div>
@@ -549,7 +549,7 @@ const Employees = () => {
                           setFormData({ ...emp, advance_type: 'issue', advance_amount: '', advance_installment: defaultInst }); 
                         }} className="p-2 text-slate-400 hover:text-indigo-500 transition-all rounded-xl hover:bg-white shadow-sm border border-transparent hover:border-slate-100 flex items-center gap-1">
                           <Wallet size={14} />
-                          <span className="text-[10px] font-black uppercase">Advance</span>
+                          <span className="text-[10px] font-black uppercase">{t('Advance')}</span>
                         </button>
                         <button onClick={() => { setSelectedEmployee(emp); setFormData({ ...emp, contribution_applicable: emp.contribution_applicable === 1 || emp.contribution_applicable === true || emp.contribution_applicable === '1', employee_contribution_percentage: emp.employee_contribution_percentage ?? '', employer_contribution_percentage: emp.employer_contribution_percentage ?? '', signature: emp.signature || null, password: '', profileImage: null }); setPreviewImage(emp.photo); setSignatureType('upload'); setActiveModal('view'); }} className="p-2 text-slate-400 hover:text-primary transition-all rounded-xl hover:bg-white shadow-sm border border-transparent hover:border-slate-100"><Eye size={16} /></button>
                         <button onClick={() => { setSelectedEmployee(emp); setFormData({ ...emp, contribution_applicable: emp.contribution_applicable === 1 || emp.contribution_applicable === true || emp.contribution_applicable === '1', employee_contribution_percentage: emp.employee_contribution_percentage ?? '', employer_contribution_percentage: emp.employer_contribution_percentage ?? '', signature: emp.signature || null, password: '', profileImage: null }); setPreviewImage(emp.photo); setSignatureType('upload'); setActiveModal('edit'); }} className="p-2 text-slate-400 hover:text-emerald-500 transition-all rounded-xl hover:bg-white shadow-sm border border-transparent hover:border-slate-100"><Edit2 size={16} /></button>

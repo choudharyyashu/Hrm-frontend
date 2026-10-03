@@ -1,38 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Joyride, STATUS } from 'react-joyride';
+import { useSettings } from '../context/SettingsContext';
 
 const TourGuide = ({ run, setRun }) => {
-  const [steps] = useState([
+  const { t } = useSettings();
+
+  const steps = [
     {
       target: '#tour-dashboard-nav',
-      content: 'Welcome to your Admin Dashboard! Here you can get a quick overview of your company metrics.',
+      content: t('Welcome to your Admin Dashboard! Here you can get a quick overview of your company metrics.'),
       disableBeacon: true,
     },
     {
       target: '#tour-employees-nav',
-      content: 'Add, edit, or remove employees from your company here. You can set their roles and details.',
+      content: t('Add, edit, or remove employees from your company here. You can set their roles and details.'),
     },
     {
       target: '#tour-attendance-nav',
-      content: 'Track daily attendance, view punch-in/out times, and manually correct missing records.',
+      content: t('Track daily attendance, view punch-in/out times, and manually correct missing records.'),
     },
     {
       target: '#tour-face-register-nav',
-      content: 'Register employee faces for secure, AI-powered biometric attendance tracking.',
+      content: t('Register employee faces for secure, AI-powered biometric attendance tracking.'),
     },
     {
       target: '#tour-payroll-nav',
-      content: 'Process salaries, generate payslips, and view payment histories efficiently.',
+      content: t('Process salaries, generate payslips, and view payment histories efficiently.'),
     },
     {
       target: '#tour-settings-nav',
-      content: 'Configure company details, set up geolocation fences, and more.',
+      content: t('Configure company details, set up geolocation fences, and more.'),
     },
     {
       target: '#tour-help-button',
-      content: 'Need a refresher? Click here anytime to restart this guided tour!',
+      content: t('Need a refresher? Click here anytime to restart this guided tour!'),
     }
-  ]);
+  ];
 
   const handleJoyrideCallback = (data) => {
     const { status } = data;

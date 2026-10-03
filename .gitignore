@@ -17,11 +17,8 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Scratch
-scratch/
-
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

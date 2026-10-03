@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   LifeBuoy,
   User,
@@ -11,7 +11,9 @@ import {
   CheckCircle2,
   UploadCloud,
   Eye,
-  EyeOff
+  EyeOff,
+  Trash2,
+  RefreshCw
 } from 'lucide-react';
 import api from '../../utils/axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,6 +26,7 @@ const Profile = ({ type = 'admin' }) => {
   const { updateUser } = useAuth();
   const { showAlert } = useUI();
   const { t } = useSettings();
+  const fileInputRef = useRef(null);
   const [userData, setUserData] = useState({
     name: 'Loading...',
     role: 'Staff',
@@ -35,6 +38,7 @@ const Profile = ({ type = 'admin' }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isPhotoUploading, setIsPhotoUploading] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -60,7 +64,7 @@ const Profile = ({ type = 'admin' }) => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleUpdate = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     try {
       setIsSaving(true);
       await api.put('/profile', {
@@ -80,27 +84,27 @@ const Profile = ({ type = 'admin' }) => {
         email: userData.email,
         photo: userData.photo
       });
-      showAlert('Profile updated successfully', 'success');
+      showAlert(t('Profile updated successfully'), 'success');
 
     } catch (err) {
       console.error('Error updating profile:', err);
-      showAlert('Failed to update profile', 'error');
+      showAlert(t('Failed to update profile'), 'error');
     } finally {
       setIsSaving(false);
     }
   };
 
   const handlePasswordUpdate = async () => {
-    if (!password || !oldPassword) return showAlert('Please enter both old and new passwords', 'warning');
+    if (!password || !oldPassword) return showAlert(t('Please enter both old and new passwords'), 'warning');
     try {
       setIsSaving(true);
       await api.post('/settings/change-password', { old_password: oldPassword, new_password: password });
-      showAlert('Password updated successfully', 'success');
+      showAlert(t('Password updated successfully'), 'success');
       setPassword('');
       setOldPassword('');
     } catch (err) {
       console.error('Error updating password:', err);
-      showAlert(err.response?.data?.error || 'Failed to update password', 'error');
+      showAlert(err.response?.data?.error || t('Failed to update password'), 'error');
     } finally {
       setIsSaving(false);
     }
@@ -111,14 +115,109 @@ const Profile = ({ type = 'admin' }) => {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserData(prev => ({ ...prev, photo: reader.result }));
+  const compressImage = (file, maxWidth = 600, maxHeight = 600, quality = 0.85) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(dataUrl);
       };
-      reader.readAsDataURL(file);
+      img.onerror = (err) => reject(err);
+    });
+  };
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      return showAlert(t('Please select a valid image file (JPG, PNG, WebP)'), 'warning');
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return showAlert(t('Image size should be less than 5MB'), 'warning');
+    }
+
+    try {
+      setIsPhotoUploading(true);
+      const base64Image = await compressImage(file);
+      
+      setUserData(prev => ({ ...prev, photo: base64Image }));
+
+      // Auto-save photo directly to backend & context
+      await api.put('/profile', {
+        name: userData.name,
+        role: userData.role,
+        email: userData.email,
+        location: userData.location,
+        photo: base64Image
+      });
+
+      updateUser({
+        name: userData.name,
+        role: userData.role,
+        email: userData.email,
+        photo: base64Image
+      });
+
+      showAlert(t('Profile photo updated successfully!'), 'success');
+    } catch (err) {
+      console.error('Error processing photo:', err);
+      showAlert(t('Failed to upload photo'), 'error');
+    } finally {
+      setIsPhotoUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    try {
+      setIsPhotoUploading(true);
+      setUserData(prev => ({ ...prev, photo: '' }));
+
+      await api.put('/profile', {
+        name: userData.name,
+        role: userData.role,
+        email: userData.email,
+        location: userData.location,
+        photo: ''
+      });
+
+      updateUser({
+        name: userData.name,
+        role: userData.role,
+        email: userData.email,
+        photo: ''
+      });
+
+      showAlert(t('Profile photo removed'), 'info');
+    } catch (err) {
+      console.error('Error removing photo:', err);
+      showAlert(t('Failed to remove photo'), 'error');
+    } finally {
+      setIsPhotoUploading(false);
     }
   };
 
@@ -126,16 +225,95 @@ const Profile = ({ type = 'admin' }) => {
     <div className="max-w-4xl mx-auto py-4 px-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/png, image/jpeg, image/webp, image/jpg"
+          onChange={handlePhotoChange}
+          className="hidden"
+        />
+
         {/* Left: Quick Profile Card */}
         <div className="md:col-span-1 space-y-6">
           <div className="card text-center p-8 bg-white border border-slate-100 shadow-xl rounded-[2rem]">
-            <div className="relative inline-block mb-6">
-              <div className="w-32 h-32 rounded-full border-4 border-primary/10 p-1">
+            <div className="relative inline-block mb-4 group">
+              <div className="w-32 h-32 rounded-full border-4 border-primary/10 p-1 relative">
                 <div className="w-full h-full rounded-full overflow-hidden bg-slate-50 border-2 border-white shadow-inner flex items-center justify-center">
-                  <User size={64} className="text-slate-300" />
+                  {userData.photo ? (
+                    <img
+                      src={userData.photo}
+                      alt={userData.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User size={56} className="text-slate-300" />
+                  )}
                 </div>
+
+                {/* Hover Camera Overlay Button */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isPhotoUploading}
+                  className="absolute inset-1 rounded-full bg-slate-900/60 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer backdrop-blur-[2px]"
+                  title={t('Click to upload new photo')}
+                >
+                  {isPhotoUploading ? (
+                    <RefreshCw size={20} className="animate-spin" />
+                  ) : (
+                    <>
+                      <Camera size={22} className="mb-0.5" />
+                      <span className="text-[9px] font-black uppercase tracking-wider">{t('Change')}</span>
+                    </>
+                  )}
+                </button>
               </div>
+
+              {/* Bottom Camera Icon Badge */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isPhotoUploading}
+                className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center shadow-md shadow-primary/30 border-2 border-white hover:bg-primary/90 hover:scale-110 transition-all cursor-pointer"
+                title={t('Upload Profile Photo')}
+              >
+                {isPhotoUploading ? (
+                  <RefreshCw size={14} className="animate-spin" />
+                ) : (
+                  <Camera size={16} />
+                )}
+              </button>
             </div>
+
+            {/* Photo Action Buttons */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isPhotoUploading}
+                className="px-3.5 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-black uppercase tracking-wider rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <UploadCloud size={13} />
+                <span>{userData.photo ? t('Change Photo') : t('Upload Photo')}</span>
+              </button>
+
+              {userData.photo && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  disabled={isPhotoUploading}
+                  className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-all cursor-pointer border border-rose-100"
+                  title={t('Remove Photo')}
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+            </div>
+            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-2">
+              {t('JPG, PNG, WebP up to 5MB')}
+            </p>
+
             <h2 className="text-xl font-black text-slate-800 tracking-tight">{userData.name}</h2>
             <div className="mt-2 inline-block px-4 py-1 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-widest border border-primary/10">
               {t(userData.role)}

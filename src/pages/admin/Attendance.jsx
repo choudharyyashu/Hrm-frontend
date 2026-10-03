@@ -373,7 +373,7 @@ const Attendance = () => {
                 onClick={() => setIsDateRange(!isDateRange)} 
                 className={`text-[10px] font-black uppercase px-3 py-2 rounded-xl transition-colors ${isDateRange ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
               >
-                {isDateRange ? 'Range Mode' : 'Single Day'}
+                {isDateRange ? t('Range Mode') : t('Single Day')}
               </button>
               
               {!isDateRange ? (
@@ -385,7 +385,7 @@ const Attendance = () => {
               ) : (
                 <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl px-2 py-1">
                   <input type="date" className="bg-transparent border-none text-xs font-bold text-slate-600 focus:ring-0 outline-none py-1.5" value={dateRange.start} onChange={(e) => setDateRange({...dateRange, start: e.target.value})} />
-                  <span className="text-slate-300 text-xs font-bold">to</span>
+                  <span className="text-slate-300 text-xs font-bold">{t('to')}</span>
                   <input type="date" className="bg-transparent border-none text-xs font-bold text-slate-600 focus:ring-0 outline-none py-1.5" value={dateRange.end} onChange={(e) => setDateRange({...dateRange, end: e.target.value})} />
                 </div>
               )}
@@ -393,7 +393,7 @@ const Attendance = () => {
           </div>
           <div className="flex flex-wrap gap-2">
 
-            <button onClick={() => setShowBulkModal(true)} className="btn-primary py-2.5 px-4 sm:px-6 flex items-center gap-2 shadow-lg shadow-primary/20 text-[10px] uppercase font-black tracking-widest"><Plus size={16} /> <span className="hidden sm:inline">Bulk</span> Mark</button>
+            <button onClick={() => setShowBulkModal(true)} className="btn-primary py-2.5 px-4 sm:px-6 flex items-center gap-2 shadow-lg shadow-primary/20 text-[10px] uppercase font-black tracking-widest"><Plus size={16} /> <span className="hidden sm:inline">{t('Bulk')}</span> {t('Mark')}</button>
             <button onClick={() => {
               setManualData({
                 employeeId: '',
@@ -403,9 +403,9 @@ const Attendance = () => {
                 status: 'present'
               });
               setShowManualModal(true);
-            }} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100"><Clock size={16} /> Manual</button>
-            <button onClick={() => setShowHolidayModal(true)} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100 bg-amber-50 text-amber-600 border-amber-100"><Calendar size={16} /> Holidays</button>
-            <button onClick={exportToCSV} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100 bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 transition-colors"><Download size={16} /> Export</button>
+            }} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100"><Clock size={16} /> {t('Manual')}</button>
+            <button onClick={() => setShowHolidayModal(true)} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100 bg-amber-50 text-amber-600 border-amber-100"><Calendar size={16} /> {t('Holidays')}</button>
+            <button onClick={exportToCSV} className="btn-secondary py-2.5 px-4 sm:px-6 flex items-center gap-2 text-[10px] uppercase font-black tracking-widest border border-slate-100 bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 transition-colors"><Download size={16} /> {t('Export')}</button>
           </div>
         </div>
 

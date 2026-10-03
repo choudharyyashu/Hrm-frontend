@@ -469,23 +469,23 @@ const Settings = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
         {/* Navigation Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="card p-3 space-y-1">
+        <div className="lg:col-span-1 lg:sticky lg:top-20 z-10">
+          <div className="card p-2 sm:p-3 flex flex-row overflow-x-auto lg:flex-col lg:space-y-1 gap-1.5 custom-scrollbar pb-3 lg:pb-3">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-4 px-5 py-4 rounded-[1.25rem] text-sm font-black transition-all group ${activeTab === tab.id
-                    ? 'bg-primary text-white shadow-xl shadow-primary/20'
+                className={`flex items-center gap-2.5 sm:gap-4 px-3.5 sm:px-5 py-2.5 sm:py-3.5 lg:py-4 rounded-xl lg:rounded-[1.25rem] text-xs sm:text-sm font-black transition-all group shrink-0 lg:shrink whitespace-nowrap lg:whitespace-normal cursor-pointer ${activeTab === tab.id
+                    ? 'bg-primary text-white shadow-lg lg:shadow-xl shadow-primary/20'
                     : 'text-slate-500 hover:bg-slate-50'
                   }`}
               >
-                <div className={`transition-transform group-hover:scale-110 ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}>
+                <div className={`transition-transform group-hover:scale-110 shrink-0 ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`}>
                   {tab.icon}
                 </div>
-                {tab.label}
+                <span className="truncate">{tab.label}</span>
               </button>
             ))}
           </div>

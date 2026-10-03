@@ -421,12 +421,12 @@ const LeaveManagement = () => {
                             leave.status === 'Pending' ? 'bg-amber-500' : 
                             leave.status === 'Rejected' ? 'bg-rose-500' : 'bg-slate-400'
                           }`}></div>
-                          {leave.status}
+                          {t(leave.status)}
                         </span>
                       </td>
                       <td className="py-5 max-w-[200px] truncate">
                         <p className="text-[11px] text-slate-600 font-bold truncate" title={leave.reason}>
-                          {leave.reason || <span className="text-slate-300 italic uppercase">No Reason Stated</span>}
+                          {leave.reason || <span className="text-slate-300 italic uppercase">{t('No Reason Stated')}</span>}
                         </p>
                       </td>
                       <td className="py-5 pr-8 text-right">
@@ -437,13 +437,13 @@ const LeaveManagement = () => {
                                 onClick={() => handleUpdateStatus(leave.id, 'Approved')}
                                 className="px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-emerald-600 shadow-sm shadow-emerald-500/20 transition-colors flex items-center gap-1"
                               >
-                                <CheckCircle2 size={12} /> Approve
+                                <CheckCircle2 size={12} /> {t('Approve')}
                               </button>
                               <button
                                 onClick={() => handleUpdateStatus(leave.id, 'Rejected')}
                                 className="px-3 py-1.5 bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-rose-600 shadow-sm shadow-rose-500/20 transition-colors flex items-center gap-1"
                               >
-                                <XCircle size={12} /> Reject
+                                <XCircle size={12} /> {t('Reject')}
                               </button>
                             </>
                           )}
@@ -453,13 +453,13 @@ const LeaveManagement = () => {
                                 onClick={() => handleUpdateStatus(leave.id, 'Rejected')}
                                 className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-rose-100 transition-colors flex items-center gap-1"
                               >
-                                <XCircle size={12} /> Reject
+                                <XCircle size={12} /> {t('Reject')}
                               </button>
                               <button
                                 onClick={() => handleUpdateStatus(leave.id, 'Pending')}
                                 className="px-3 py-1.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-slate-200 transition-colors flex items-center gap-1"
                               >
-                                <Clock size={12} /> Revert
+                                <Clock size={12} /> {t('Revert')}
                               </button>
                             </>
                           )}
@@ -469,13 +469,13 @@ const LeaveManagement = () => {
                                 onClick={() => handleUpdateStatus(leave.id, 'Approved')}
                                 className="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-emerald-100 transition-colors flex items-center gap-1"
                               >
-                                <CheckCircle2 size={12} /> Approve
+                                <CheckCircle2 size={12} /> {t('Approve')}
                               </button>
                               <button
                                 onClick={() => handleUpdateStatus(leave.id, 'Pending')}
                                 className="px-3 py-1.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-lg text-[9px] font-black uppercase tracking-wider hover:bg-slate-200 transition-colors flex items-center gap-1"
                               >
-                                <Clock size={12} /> Revert
+                                <Clock size={12} /> {t('Revert')}
                               </button>
                             </>
                           )}
@@ -488,7 +488,7 @@ const LeaveManagement = () => {
                     <td colSpan="6" className="py-24 text-center">
                       <div className="flex flex-col items-center gap-3 opacity-30">
                         <Calendar size={40} className="text-slate-400" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em]">No requests pending approval</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em]">{t('No requests pending approval')}</p>
                       </div>
                     </td>
                   </tr>

@@ -67,6 +67,17 @@ export const SettingsProvider = ({ children }) => {
     refreshSettings();
   }, [user, refreshSettings]);
 
+  // Synchronize document language and direction
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const langLower = (localization.language || 'English').toLowerCase();
+      const isArabic = langLower.includes('arab') || langLower === 'ar';
+      const langCode = isArabic ? 'ar' : langLower.includes('hi') ? 'hi' : langLower.includes('es') || langLower.includes('span') ? 'es' : langLower.includes('de') || langLower.includes('ger') ? 'de' : 'en';
+      document.documentElement.lang = langCode;
+      document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+    }
+  }, [localization.language]);
+
   // Live Exchange Rates State (USD Base from open.er-api.com)
   const FALLBACK_RATES = {
     USD: 1,

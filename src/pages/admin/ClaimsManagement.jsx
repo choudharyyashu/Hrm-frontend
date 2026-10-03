@@ -239,12 +239,12 @@ const ClaimsManagement = () => {
                           claim.status === 'Pending' ? 'bg-amber-500' : 
                           claim.status === 'Rejected' ? 'bg-rose-500' : 'bg-slate-400'
                         }`}></div>
-                        {claim.status}
+                        {t(claim.status)}
                       </span>
                     </td>
                     <td className="py-5 max-w-[200px] truncate">
                       <p className="text-xs text-slate-600 font-bold truncate" title={claim.description}>
-                        {claim.description || <span className="text-slate-300 italic uppercase">No Description</span>}
+                        {claim.description || <span className="text-slate-300 italic uppercase">{t('No Description')}</span>}
                       </p>
                     </td>
                     <td className="py-5 text-center">
@@ -256,10 +256,10 @@ const ClaimsManagement = () => {
                           className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-wider hover:bg-indigo-100 transition-colors"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
-                          View
+                          {t('View')}
                         </a>
                       ) : (
-                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">N/A</span>
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">{t('N/A')}</span>
                       )}
                     </td>
                     <td className="py-5 pr-8 text-center">
@@ -276,9 +276,9 @@ const ClaimsManagement = () => {
                             'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'
                           }`}
                         >
-                          <option value="Pending" className="font-bold">Pending</option>
-                          <option value="Approved" className="font-bold">Approved</option>
-                          <option value="Rejected" className="font-bold">Rejected</option>
+                          <option value="Pending" className="font-bold">{t('Pending')}</option>
+                          <option value="Approved" className="font-bold">{t('Approved')}</option>
+                          <option value="Rejected" className="font-bold">{t('Rejected')}</option>
                         </select>
                         {updatingId === claim.id && (
                           <div className="absolute inset-0 flex items-center justify-center bg-white/50 rounded-lg">
@@ -294,7 +294,7 @@ const ClaimsManagement = () => {
                   <td colSpan="7" className="py-24 text-center">
                     <div className="flex flex-col items-center gap-3 opacity-30">
                       <CreditCard size={40} className="text-slate-400" />
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em]">No expense claims found</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em]">{t('No expense claims found')}</p>
                     </div>
                   </td>
                 </tr>

@@ -58,25 +58,17 @@ const Footer = () => {
           {/* Left Brand Column */}
           <div className="col-span-2 md:col-span-12 lg:col-span-5 pr-0 lg:pr-6">
             <Link to="/" className="flex items-center gap-3 mb-4 group">
-              {siteInfo.company_logo ? (
-                <>
-                  <div className="h-11 w-11 bg-white rounded-xl p-1 flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
-                    <img src={siteInfo.company_logo} alt={displayName} className="h-full w-full object-contain" />
-                  </div>
-                  <span className="font-heading font-extrabold text-2xl text-white group-hover:text-primary-light transition-colors">
-                    {displayName}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-heading font-bold text-lg shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-                    {logoLetter}
-                  </div>
-                  <span className="font-heading font-extrabold text-2xl text-white group-hover:text-primary-light transition-colors">
-                    {displayName}
-                  </span>
-                </>
-              )}
+              <div className="h-11 w-11 bg-white rounded-xl p-1 flex items-center justify-center shadow-md border border-white/30 group-hover:scale-105 transition-transform shrink-0">
+                <img 
+                  src={siteInfo.company_logo && !siteInfo.company_logo.startsWith('data:image') ? siteInfo.company_logo : '/logo.png'} 
+                  alt={displayName} 
+                  className="h-full w-full object-contain" 
+                  onError={(e) => { e.currentTarget.src = '/logo.png'; }}
+                />
+              </div>
+              <span className="font-heading font-extrabold text-2xl text-white group-hover:text-primary-light transition-colors">
+                {displayName}
+              </span>
             </Link>
             
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-5 font-normal max-w-full">
