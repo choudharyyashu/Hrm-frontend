@@ -84,7 +84,7 @@ const PricingSection = () => {
       badge: '7-Day Free Trial',
       badgeColor: 'from-emerald-500 to-teal-500',
       features: [
-        'Up to 15 Employees',
+        'Up to 5 Employees',
         '7 Days Full Access',
         'Attendance Management',
         'Leave & Claims Management',
